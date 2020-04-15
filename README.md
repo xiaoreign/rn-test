@@ -1,2 +1,2 @@
-# rn-test
-react-native dva ant design
+# react-native-demo
+antd  react-native dva  react-navigation
