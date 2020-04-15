@@ -32,7 +32,6 @@ class LoginPage extends Component {
   }
 
   componentDidMount() {
-    // this.getAllWindows()
     asyncStorage.setItem('baseUrl',this.state.ip)
   }
 
