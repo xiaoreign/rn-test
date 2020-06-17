@@ -4,6 +4,7 @@ import { Button, InputItem, List, Picker } from '@ant-design/react-native'
 import { connect } from 'react-redux'
 import { loginService } from '@/services';
 import asyncStorage from '@react-native-community/async-storage'
+import RNFS from 'react-native-fs';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -11,45 +12,61 @@ class LoginPage extends Component {
     this.state = {
       username: 'admin',
       password: '111111',
-      ip: 'http://192.168.1.103:13212',
-      // ip:'http://192.168.43.99:8081',
+      // ip: 'http://192.168.1.103:13212',
+      ip:'http://192.168.43.99:8081',
       windows: [],
       windowId: null,
-      WindowType: "PreparationWindow"
+      WindowType: 'PreparationWindow',
     };
   }
 
   login() {
-    const { username, password } = this.state;
-    const { dispatch } = this.props;
+    const {username, password} = this.state;
+    const {dispatch} = this.props;
     const req = {
       username,
       password,
       windowId: this.state.windowId[0],
-      windowType:'Dispensingwindow'
-    }
-    dispatch({ type: 'login/login', payload: req })
+      windowType: 'Dispensingwindow',
+    };
+    dispatch({type: 'login/login', payload: req});
   }
 
   componentDidMount() {
-    asyncStorage.setItem('baseUrl',this.state.ip)
+    asyncStorage.setItem('baseUrl', this.state.ip);
   }
+
 
   onChange = value => {
     this.setState({
-      windowId:value,
-    });
+      windowId: value,
+    })
+  };
+
+  writeFile = () => {
+    console.log(RNFS.DocumentDirectoryPath)
+    var path = RNFS.DocumentDirectoryPath +'/'+Date.parse(new Date())+'.txt';
+    console.log(path)
+    // write the file
+    RNFS.writeFile(path, '这是时间戳: '+Date.parse(new Date()), 'utf8')
+      .then(success => {
+        console.log('FILE WRITTEN!');
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
   }
+
 
   onPress = () => {
-    asyncStorage.setItem('baseUrl', this.state.ip)
+    asyncStorage.setItem('baseUrl', this.state.ip);
     setTimeout(() => {
-      this.getAllWindows()
+      this.getAllWindows();
     }, 200);
-  }
+  };
 
   getAllWindows = async () => {
-    const { Status, Data } = await loginService.getAllWindows()
+    const {Status, Data} = await loginService.getAllWindows();
     if (Status == 200) {
       const windows = [];
       Data.forEach(v => {
@@ -66,11 +83,11 @@ class LoginPage extends Component {
         windows,
       });
     }
-  }
+  };
 
   render() {
-    const { loginloading } = this.props;
-    const { windows, windowId } = this.state
+    const {loginloading} = this.props;
+    const {windows, windowId} = this.state;
     return (
       <ImageBackground
         style={{flex: 1}}
@@ -121,7 +138,10 @@ class LoginPage extends Component {
                   value={windowId}
                   data={windows}
                   onChange={this.onChange}>
-                  <List.Item arrow="horizontal" onPress={this.onPress} key="window">
+                  <List.Item
+                    arrow="horizontal"
+                    onPress={this.onPress}
+                    key="window">
                     选择窗口
                   </List.Item>
                 </Picker>

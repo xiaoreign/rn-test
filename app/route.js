@@ -13,8 +13,7 @@ import My from '@/pages/my';
 import Login from '@/pages/login';
 import AuthLoadingScreen from '@/pages/authloading';
 import Setting from '@/pages/setting'
- 
-
+import Log from '@/pages/log'
 /**
  * 配置底部标签
  */
@@ -157,7 +156,13 @@ const Stack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: '登录'
     })
-  }
+  },
+  log: {
+    screen: Log,
+    navigationOptions: {
+      title: '日志'
+    }
+  },
 }, {
   defaultNavigationOptions: {
     headerTitleAlign: 'center'
